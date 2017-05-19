@@ -14,7 +14,7 @@ spec:
     - name: log-storage
       mountPath: /var/log
   - name: sidecar-log-collector
-    image: leahnp/fbsidecar
+    image: quay.io/samsung_cnct/k2-logging-fluent-bit-sidecar:latest
     env:
       - name:  FLUENT_ELASTICSEARCH_HOST
         value: "elasticsearch"
