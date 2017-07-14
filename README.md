@@ -8,7 +8,7 @@ This example includes a log generator app that runs with Fluent-Bit in one pod a
 
 To deploy in a Kubernetes cluster:
 
-```kubectl -f create fluent-bit-sidecar.yaml```
+```kubectl -f apply fluent-bit-sidecar.yaml```
 
 [Elasticsearch for Kubernetes](https://github.com/kubernetes/kubernetes/tree/master/examples/elasticsearch)
 
