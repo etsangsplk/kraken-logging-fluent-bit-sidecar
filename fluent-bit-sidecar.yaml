@@ -1,10 +1,63 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kube-logging
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluentbit-sidecar
+  namespace: kube-logging
+  labels:
+    component: fluentbit-sidecar
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: fluentbit-sidecar
+  labels:
+    component: fluentbit-sidecar
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+rules:
+- apiGroups: [""]
+  resources: ["namespaces", "pods"]
+  verbs: ["get", "watch", "list"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: fluentbit-sidecar
+  labels:
+    component: fluentbit-sidecar
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+subjects:
+- kind: ServiceAccount
+  name: fluentbit-sidecar
+  namespace: kube-logging
+  apiGroup: ""
+roleRef:
+  kind: ClusterRole
+  name: fluentbit-sidecar
+  apiGroup: ""
+
+---
 apiVersion: v1
 kind: Pod
 metadata:
   name: log-app
+  namespace: kube-logging
   labels:
     app: log-app
 spec:
+  serviceAccountName: fluentbit-sidecar
   containers:
   - name: log-app
     image: quay.io/leahnp/leah_log_app:latest
